@@ -2,7 +2,7 @@ from SAT.binary import solve_n_queens_w_binary, print_solution
 from SAT.commander import solve_n_queens_w_commander
 from SAT.product import solve_n_queens_w_product
 from SAT.sequential import solve_n_queens_w_sequential
-from CP.CP_SAT import solve_n_queens_ortools
+from CP.CP_SAT import backtracking_for_CP_SAT
 import time
 
 
@@ -21,7 +21,7 @@ def main ():
         solution = solve_n_queens_w_product(n)
 
     elif s=="CP_SAT":
-        solution = solve_n_queens_ortools(n)
+        solution = backtracking_for_CP_SAT(n)
 
     else:
         solution = solve_n_queens_w_sequential(n)

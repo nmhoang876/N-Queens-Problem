@@ -1,35 +1,31 @@
-from ortools.sat.python import cp_model
+def backtracking_for_CP_SAT(n):
+    board = [[0] * n for _ in range(n)]
 
-def solve_n_queens_ortools(n):
-    # Khởi tạo mô hình CP
-    model = cp_model.CpModel()
+    cols = set()
+    diag1 = set()
+    diag2 = set()
 
-    # queens[i] là vị trí cột của quân hậu ở hàng i (giá trị từ 0 đến n-1)
-    queens = [model.NewIntVar(0, n - 1, f'q_{i}') for i in range(n)]
+    def backtrack(row):
+        if row == n:
+            return True
 
-    # 1. Các quân hậu không cùng cột
-    model.AddAllDifferent(queens)
+        for col in range(n):
+            if col in cols or (row - col) in diag1 or (row + col) in diag2:
+                continue
 
-    # 2. Các quân hậu không cùng đường chéo chính (q_i + i phải khác nhau)
-    model.AddAllDifferent([queens[i] + i for i in range(n)])
+            board[row][col] = 1
+            cols.add(col)
+            diag1.add(row - col)
+            diag2.add(row + col)
 
-    # 3. Các quân hậu không cùng đường chéo phụ (q_i - i phải khác nhau)
-    model.AddAllDifferent([queens[i] - i for i in range(n)])
+            if backtrack(row + 1):
+                return True
 
-    # Khởi tạo Solver
-    solver = cp_model.CpSolver()
-    # solver.parameters.max_time_in_seconds = 60.0 # Tùy chọn giới hạn thời gian
+            board[row][col] = 0
+            cols.remove(col)
+            diag1.remove(row - col)
+            diag2.remove(row + col)
 
-    # start_time = time.time()
-    status = solver.Solve(model)
-    # exec_time = time.time() - start_time
-
-    if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
-        # Chuyển đổi lời giải về dạng ma trận bàn cờ 0/1
-        board = [[0] * n for _ in range(n)]
-        for i in range(n):
-            col = solver.Value(queens[i])
-            board[i][col] = 1
+    if backtrack(0):
         return board
-    else:
-        return None
+    return None
