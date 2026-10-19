@@ -1,5 +1,5 @@
-def backtracking_for_CP_SAT(n):
-    board = [[0] * n for _ in range(n)]
+def solve_n_queens_w_CP_SAT(n):
+    board = [[0 for j in range(n)] for i in range(n)]
 
     cols = set()
     diag1 = set()
@@ -26,6 +26,9 @@ def backtracking_for_CP_SAT(n):
             diag1.remove(row - col)
             diag2.remove(row + col)
 
+        return False
+
     if backtrack(0):
         return board
-    return None
+    else:
+        return None
